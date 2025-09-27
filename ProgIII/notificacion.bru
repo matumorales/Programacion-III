@@ -1,0 +1,24 @@
+meta {
+  name: notificacion
+  type: http
+  seq: 1
+}
+
+post {
+  url: 
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "fecha": "21/05/2025",
+    "salon": "principal",
+    "turno": "3ero",
+    "correoDestino":"ignaciomorales@live.com.ar"
+  }
+}
+
+settings {
+  encodeUrl: true
+}
