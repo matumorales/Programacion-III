@@ -2,8 +2,7 @@
 import express from 'express';
 import nodemailer from 'nodemailer';
 import handlebars from 'handlebars';
-//import { fileURLtoPath } from 'url'; 
-import { fileURLToPath} from 'url';
+import {fileURLToPath} from 'url';
 import {readFile} from 'fs/promises';
 import path from 'path'; 
 
@@ -42,8 +41,28 @@ app.post('/notificacion', async (req, res) => {
             {fecha: fecha,
              salon: salon,
              turno: turno});
-        console.log(html);
+        
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.EMAIL,
+                pass: process.env.PASSWORD,
+            },
+        });
+        const opciones = {
+            to: correoDestino,
+            subject: 'Notificacion de Reserva',
+            html: html
+        };
 
+        transporter.sendMail(opciones, (error, info) => {
+            if (error) {
+                console.log(error); 
+                res.json({'ok': false, 'mensaje': 'Error enviando el correo'});
+            } 
+            console.log(info);
+            res.json({'ok': true, 'mensaje': 'Notificacion enviada'});
+        });   
     } catch (error){
         console.log(error);
     } 
