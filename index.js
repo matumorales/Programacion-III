@@ -5,6 +5,8 @@ import handlebars from 'handlebars';
 import {fileURLToPath} from 'url';
 import {readFile} from 'fs/promises';
 import path from 'path'; 
+//import dotenv from 'dotenv';
+//dotenv.config();
 
 //Creo una instancia del Servidor Express
 const app = express();
@@ -16,6 +18,9 @@ app.use(express.json());
 app.get('/test', (req, res) => {
     res.json({'Ok':true});
 });
+
+//Cargo el archivo con las variables de entorno
+process.loadEnvFile();
 
 //EndPoint Notificacion
 app.post('/notificacion', async (req, res) => {
@@ -49,6 +54,7 @@ app.post('/notificacion', async (req, res) => {
                 pass: process.env.PASSWORD,
             },
         });
+
         const opciones = {
             to: correoDestino,
             subject: 'Notificacion de Reserva',
@@ -62,7 +68,7 @@ app.post('/notificacion', async (req, res) => {
             } 
             console.log(info);
             res.json({'ok': true, 'mensaje': 'Notificacion enviada'});
-        });   
+        });    
     } catch (error){
         console.log(error);
     } 
@@ -71,10 +77,7 @@ app.post('/notificacion', async (req, res) => {
 
 });
 
-//Cargo el archivo con las variables de entorno
-process.loadEnvFile();
-
 //Pongo a escuchar al servidor en el PUERTO = 3000
-app.listen(process.env.PUERTO, () =>{
-    console.log(`Servidor en el puerto ${process.env.PUERTO}`);
-})
+app.listen(process.env.PUERTO, () => {
+    console.log(`Servidor en el puerto 3000`);
+});
