@@ -11,7 +11,6 @@
     "des": "node --watch index.js"
   },
   "dependencies": {
-    "dotenv": "^17.2.2",
     "express": "^5.1.0",
     "handlebars": "^4.7.8",
     "nodemailer": "^7.0.6"

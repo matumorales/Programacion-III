@@ -1,12 +1,10 @@
 //Importo los modulos que necesito
 import express from 'express';
-import nodemailer from 'nodemailer';
 import handlebars from 'handlebars';
+import nodemailer from 'nodemailer';
 import {fileURLToPath} from 'url';
 import {readFile} from 'fs/promises';
 import path from 'path'; 
-//import dotenv from 'dotenv';
-//dotenv.config();
 
 //Creo una instancia del Servidor Express
 const app = express();
@@ -24,8 +22,6 @@ process.loadEnvFile();
 
 //EndPoint Notificacion
 app.post('/notificacion', async (req, res) => {
-    console.log(req.body);
-
     if (!req.body.fecha || !req.body.salon || !req.body.turno || !req.body.correoDestino){
         res.status(400).send({'Estado':false, 'mensaje': 'Faltan datos que son requeridos'});
     }
@@ -36,10 +32,10 @@ app.post('/notificacion', async (req, res) => {
         const __filename = fileURLToPath(import.meta.url);
         const __dirname = path.dirname(__filename);
         const plantilla = path.join(__dirname, 'utiles', 'handlebars', 'plantilla.hbs');
-        const datos = await readFile(plantilla, 'utf-8'); 
+        const plantillaHbsEmail = await readFile(plantilla, 'utf-8'); 
 
         // Compilo la plantilla
-        const template = handlebars.compile(datos);
+        const template = handlebars.compile(plantillaHbsEmail);
 
         //Paso los datos obtenidos a la plantilla
         var html = template(
@@ -63,12 +59,11 @@ app.post('/notificacion', async (req, res) => {
 
         transporter.sendMail(opciones, (error, info) => {
             if (error) {
-                console.log(error); 
                 res.json({'ok': false, 'mensaje': 'Error enviando el correo'});
             } 
-            console.log(info);
             res.json({'ok': true, 'mensaje': 'Notificacion enviada'});
         });    
+
     } catch (error){
         console.log(error);
     } 
